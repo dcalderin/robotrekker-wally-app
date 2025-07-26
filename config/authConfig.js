@@ -2,8 +2,13 @@
 export const msalConfig = {
   auth: {
     clientId: '04e2e4c0-153d-4d41-870e-41aab6af485b',
-    authority: 'https://login.microsoftonline.com/47ad30b9-4668-4bb3-a485-0a1c23a66679',
-    redirectUri: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'
+    // For External ID tenants, use the specific tenant subdomain
+    authority: 'https://login.microsoftonline.com/robotrekerai.onmicrosoft.com',
+    redirectUri: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000',
+    // Add these for External ID
+    knownAuthorities: ['robotrekerai.onmicrosoft.com'],
+    cloudDiscoveryMetadata: '',
+    authorityMetadata: ''
   },
   cache: {
     cacheLocation: 'sessionStorage',
@@ -12,5 +17,7 @@ export const msalConfig = {
 };
 
 export const loginRequest = {
-  scopes: ['openid', 'profile', 'email']
+  scopes: ['openid', 'profile', 'email'],
+  // Force account selection to ensure proper tenant
+  prompt: 'select_account'
 };
