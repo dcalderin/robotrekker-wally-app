@@ -3,6 +3,23 @@ import Head from 'next/head';
 import { useMsal } from '@azure/msal-react';
 import { loginRequest } from '../config/authConfig';
 
+// Add this function right after your imports
+const renderMarkdown = (text) => {
+  return text
+    // Bold text **text** -> <strong>text</strong>
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    // Italic text *text* -> <em>text</em>
+    .replace(/(?<!\*)\*([^\*\n]+)\*(?!\*)/g, '<em>$1</em>')
+    // Code blocks `code` -> <code>code</code>
+    .replace(/`([^`]+)`/g, '<code style="background: #f1f5f9; padding: 2px 4px; border-radius: 4px; font-family: monospace;">$1</code>')
+    // Numbered lists 1. -> <li>
+    .replace(/^\d+\.\s(.+)$/gm, '<li>$1</li>')
+    // Wrap consecutive <li> items in <ol>
+    .replace(/(<li>.*<\/li>(?:\s*<li>.*<\/li>)*)/gs, '<ol style="margin: 8px 0; padding-left: 20px;">$1</ol>')
+    // Convert line breaks to <br>
+    .replace(/\n/g, '<br>');
+};
+
 export default function Home() {
   const { instance, accounts, inProgress } = useMsal();
   const [messages, setMessages] = useState([]);
@@ -269,9 +286,10 @@ export default function Home() {
                           🤖 Wally
                         </div>
                       )}
-                      <p style={{ margin: 0, whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>
-                        {message.content}
-                      </p>
+                      <div 
+                        style={{ margin: 0, lineHeight: '1.5' }}
+                        dangerouslySetInnerHTML={{ __html: renderMarkdown(message.content) }}
+                      />
                       <p style={{ 
                         margin: '6px 0 0 0', 
                         fontSize: '11px', 
