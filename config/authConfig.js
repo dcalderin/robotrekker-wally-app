@@ -32,7 +32,7 @@ export const loginRequest = {
   prompt: 'select_account', // Critical for external users
   extraQueryParameters: {
     // Remove domain_hint to allow external accounts
-    domain_hint: ''
+    p: 'sisuwally'
   }
 };
 
